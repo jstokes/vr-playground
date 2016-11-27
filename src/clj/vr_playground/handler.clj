@@ -24,7 +24,9 @@
     (head)
     [:body {:class "body-container"}
      mount-target
-     (include-js "/js/app.js")]))
+     (include-js "/js/app.js")
+     (include-js "https://aframe.io/releases/0.3.2/aframe.js")
+     ]))
 
 (defn cards-page []
   (html5
