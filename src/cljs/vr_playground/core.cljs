@@ -1,34 +1,44 @@
 (ns vr-playground.core
-    (:require [reagent.core :as reagent :refer [atom]]
-              [reagent.session :as session]
-              [secretary.core :as secretary :include-macros true]
-              [accountant.core :as accountant]))
+  (:require [reagent.core :as reagent :refer [atom]]
+            [reagent.session :as session]
+            [secretary.core :as secretary :include-macros true]
+            [accountant.core :as accountant]
+            [clojure.string :as str]))
 
 ;; -------------------------
 ;; Views
 
 (defn home-page []
-  [:div [:a-scene
-         [:a-sphere {:position "0 1.25 -5"
-                     :radius   "1.25"
-                     :color "#FE2D5E"}]
-         [:a-box {:position "-1 0.5 -3"
-                  :rotation "0 45 0"
-                  :width "1"
-                  :height "1"
-                  :depth "1"
-                  :color "#4CC3D9"}]
-         [:a-cylinder {:position "1 0.75 -3"
-                       :radius "0.5"
-                       :height "1.5"
-                       :color "#FFC65D"}]
-         [:a-plane {:position "0 0 -4"
-                    :rotation "-90 0 0"
-                    :width "4"
-                    :height "4"
-                    :color "#7BC8A4"}]
-         [:a-sky {:color "#ECECEC"}]
-         ]])
+  [:a-scene
+   (for [i (range 250)]
+     (let [rnd-between (fn [from to] (+ from (* (- to from) (rand))))
+           stringify   (fn [& args] (str/join " " args))
+
+           x (rnd-between -10 10)
+           y (rnd-between -10 10)
+           z (rnd-between -10 10)
+
+           x2 (rnd-between -10 10)
+           y2 (rnd-between -10 10)
+           z2 (rnd-between -10 10)
+
+           r1 (rnd-between 0 360)
+           r2 (rnd-between 0 360)
+           r3 (rnd-between 0 360)]
+       [:a-box {:depth    "0.1"
+                :height   "0.1"
+                :width    "0.1"
+                :rotation (stringify r1 r2 r3)
+                :color    (rand-nth ["black" "red" "green" "blue" "orange" "yellow"])}
+        [:a-animation {:attribute "position"
+                       :from      (stringify x y z)
+                       :to        (stringify x2 y2 z2)
+                       :dur       (rnd-between 1000 20000)
+                       :repeat    "indefinite"
+                       :direction "alternate"}]]))
+
+   [:a-sky {:color "#73F7DD"}]
+   ])
 
 (defn about-page []
   [:div [:h2 "About vr-playground"]
@@ -50,7 +60,7 @@
 ;; Initialize app
 
 (defn mount-root []
-  (reagent/render [current-page] (.getElementById js/document "app")))
+  (reagent/render [current-page] (.getElementById js/document "scene-container")))
 
 (defn init! []
   (accountant/configure-navigation!
