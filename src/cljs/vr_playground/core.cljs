@@ -14,7 +14,7 @@
      (let [rnd-between (fn [from to] (+ from (* (- to from) (rand))))
            stringify   (fn [& args] (str/join " " args))
 
-           rad (rnd-between 0.1 0.3)
+           rad (rnd-between 0.1 0.9)
 
            x (rnd-between -10 10)
            y (rnd-between -10 10)
@@ -22,11 +22,16 @@
 
            x2 (rnd-between -10 10)
            y2 (rnd-between -10 10)
-           z2 (rnd-between -10 10)]
+           z2 (rnd-between -10 10)
+
+           rot (rnd-between 0 360)]
        ^{:key i}
-       [:a-sphere {:color    (rand-nth ["white" "red" "green" "blue" "orange" "yellow"])
-                   :position (stringify x y z)
-                   :radius   rad}
+       [:a-box {:color    (rand-nth ["white" "red" "green" "blue" "orange" "yellow"])
+                :position (stringify x y z)
+                :width    rad
+                :height   rad
+                :depth    rad
+                :rotation rot}
         [:a-animation {:attribute "position"
                        :from      (stringify x y z)
                        :to        (stringify x2 y2 z2)
